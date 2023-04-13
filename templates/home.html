@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <h1 id="Login" >Welcome to CryptoNews</h1>
+
+  <h2 id="test">Recent Articles</h2>
+  <ul>
+    {% for article in articles %}
+      <li>
+        <a href="{{ article.url }}">{{ article.source.title }}</a>
+        <p>Description: {{ article.title }}</p>
+        <p>Date: {{ article.created_at }}</p>
+        <p>Domain: {{ article.domain }}</p>
+        {% if is_authenticated %}
+          <a href="{% url 'add_to_read' article_id=article.id %}">Add to read</a>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+
+  <!-- Add this code to display coins information -->
+  <h2>Coins Information</h2>
+  <ul>
+    {% for coin in coins %}
+      <li>
+        <p>Symbol: {{ coin.symbol }}</p>
+        <p>Name: {{ coin.name }}</p>
+        <p>Price (USD): {{ coin.priceUsd }}</p>
+        <p>Change (24Hr): {{ coin.changePercent24Hr }}%</p>
+        {% if is_authenticated %}
+          <form method="POST" action="{% url 'save_coin_amount' coin.id %}">
+            {% csrf_token %}
+            <label for="coin_amount">Amount:</label>
+            <input type="number" step="any" name="coin_amount" id="coin_amount">
+            <button type="submit">Save Amount</button>
+          </form>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

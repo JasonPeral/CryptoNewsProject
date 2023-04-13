@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% load mathfilters %}
+
+{% block content %}
+  <h1>Articles to Read</h1>
+
+  {% if saved_articles %}
+    <ul>
+      {% for article in saved_articles %}
+        <li>
+          <a href="{{ article.url }}">{{ article.title }}</a>
+          <p>Description: {{ article.description }}</p>
+          <p>Date: {{ article.date }}</p>
+          <p>Domain: {{ article.domain }}</p>
+          <a href="{% url 'accounts:delete_from_read' article.id %}">Delete</a>
+        </li>
+      {% empty %}
+        <p>No articles saved yet!</p>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No articles saved yet!</p>
+  {% endif %}
+  <h2>Saved Coin Amounts</h2>
+  {% if coin_amounts_with_market_price %}
+    <ul>
+      {% for item in coin_amounts_with_market_price %}
+      <tr>
+          <td>{{ item.coin_amount.coin_id }}</td>
+          <td>{{ item.coin_amount.amount }}</td>
+          <td>{{ item.coin_amount.amount|mul:item.coin_amount.price_usd|floatformat:2 }}</td>
+          <td>{{ item.coin_amount.amount|mul:item.market_price_usd|floatformat:2 }}</td>
+          <td>
+              <a href="{% url 'accounts:delete_coin_amount' item.coin_amount.id %}">Delete</a>
+          </td>
+      </tr>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No coin amounts saved yet!</p>
+  {% endif %}
+{% endblock %}
